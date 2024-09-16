@@ -4,12 +4,12 @@
 " 134: ~/.vim/plugged/vim-polyglot/syntax/python.vim
 " 135: /usr/share/vim/vim82/syntax/python.vim
 
-if exists("b:cellmode_syntax")
-  finish
-endif
+" if exists("b:cellmode_syntax")
+"   finish
+" endif
 
 " Highlight cell delimiters
 syntax match cellDelim '\v^\s*#(#+|\s+(##+|\%\%+)).*'
 highlight default link cellDelim TabLine
 
-let b:cellmode_syntax = "done"
+" let b:cellmode_syntax = "done"
