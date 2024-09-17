@@ -10,6 +10,9 @@
 
 " Highlight cell delimiters
 syntax match cellDelim '\v^\s*#(#+|\s+(##+|\%\%+)).*'
-highlight default link cellDelim TabLine
+highlight default link cellDelim Special
+if has("nvim")
+    highlight default link @cellDelim Special
+endif
 
 " let b:cellmode_syntax = "done"
