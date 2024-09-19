@@ -155,8 +155,8 @@ function! CopyToTmux(code)
   call CallSystem('tmux paste-buffer -t "' . target . '"')
   " In ipython5, the cursor starts at the top of the lines, so we have to move
   " to the bottom
-  let downlist = repeat('Down ', len(l:lines) + 1)
-  call CallSystem('tmux send-keys -t "' . target . '" ' . downlist)
+  "let downlist = repeat('Down ', len(l:lines) + 1)
+  "call CallSystem('tmux send-keys -t "' . target . '" ' . downlist)
   " Simulate double enter to run loaded code
   "call CallSystem('tmux send-keys -t "' . target . '" Enter Enter')
   call CallSystem('tmux send-keys -t "' . target . '" Enter')
