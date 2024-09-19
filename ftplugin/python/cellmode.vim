@@ -283,6 +283,69 @@ function! InitVariable(var, value)
     return 0
 endfunction
 
+function! MoveCellWise(upwards = 0)", was_visual)
+    " Find cell delimiters, moving via search (for delimiters).
+    " If there are exceptions, move to TOP (0), or BOTTOM ($).
+
+    call DefaultVars()
+    let xx = b:cellmode_cell_delimiter . '.*\n.'
+    " let so=&scrolloff | set so=10
+
+    " Move INTO cell if currently on delim
+    "if getline(".") =~ xx && !a:upwards
+    "    " NB: we must move entire folds (whence gj, gk) because if we're inside a fold
+    "    "     then vim search won't find the above delimiter.
+    "    "     Of course, this still does not work when we're on the very last fold.
+    "    normal gj
+    "end
+
+    " Find match above
+    "try
+    "    exec ':?'.xx
+    "catch
+    "    silent 0
+    "endtry
+    "let g:line1=line('.')
+
+    " Find match below
+    "try
+    "    exec ':/'.xx
+    "catch
+    "    silent $
+    "endtry
+    "let g:line2=line('.')
+
+    " Re-select visual
+    "if a:was_visual
+    "    normal gv
+    "endif
+
+    " Goto match
+    if a:upwards
+        "call setpos('.', [0, g:line1, 0, 0])
+        call search(xx, 'bcesW')  " Move to top of current cell
+        call search(xx, 'beW')
+    else
+        "call setpos('.', [0, g:line2, 0, 0])
+        call search(xx, 'esW')
+    endif
+
+    " Manual scrolloff
+    "mark a
+    "normal 10j
+    "normal 'a
+    "normal 10k
+    "normal 'a
+
+    " Always scroll: center, then down 25%
+    "normal zz
+    "exe "normal " . &lines/4. "\<C-e>"
+
+    " Restore setting
+    "if l:wpscn | set wrapscan | endif
+    "let &so=so
+endfunction
+
 call InitVariable("g:cellmode_default_mappings", 1)
 
 if g:cellmode_default_mappings
