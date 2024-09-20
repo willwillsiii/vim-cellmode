@@ -351,10 +351,64 @@ function! MoveCellWise(upwards = 0)", was_visual)
     "let &so=so
 endfunction
 
+function! FoldCreate()
+    if &foldmethod != 'manual'
+        set foldmethod=manual
+    endif
+    call DefaultVars()
+    let xx = b:cellmode_cell_delimiter
+    let l1 = search(xx, 'bnW')
+    let l2 = search(xx, 'cnW')
+    if l2 == 0 | let l2 = line('$') | endif
+    " Check if there is space to fold
+    if  l2 - l1 > 2
+        execute ":".(l1+1).",".(l2-1)."fold"
+    else
+        return -1
+    endif
+endfunction
+
+function! FoldAll()
+    "if &foldmethod != 'manual'
+    "    set foldmethod=manual
+    "endif
+    call DefaultVars()
+    let xx = b:cellmode_cell_delimiter
+    let pos = getcurpos()
+    "let fl = &foldlevel
+    normal! zR
+    keepjumps normal! gg
+
+    let is_on_last_line = line(".") == line("$")
+    while !is_on_last_line
+        "if !foldlevel(".")
+        "    call FoldCreate()
+        "    normal! j
+        "else
+        "    let line_tmp = getline(".")
+        "    norm gj
+        "    " Fix corner case (gj doesnt move to bottom when on last fold)
+        "    if getline(".") == line_tmp
+        "        silent $
+        "    endif
+        "endif
+        call FoldCreate()
+        normal! 2j
+        let is_on_last_line = line(".") == line("$")
+    endwhile
+
+    " Restore cursor pos
+    call setpos('.', pos)
+    "let &foldlevel=fl+1
+endfunction
+
+command! FoldAll :call FoldAll()
+
 call InitVariable("g:cellmode_default_mappings", 1)
 
 if g:cellmode_default_mappings
     vnoremap <silent> <C-c> :call RunTmuxPythonChunk()<CR>
     noremap <silent> <C-b> :call RunTmuxPythonCell(0)<CR>
     noremap <silent> <C-g> :call RunTmuxPythonCell(1)<CR>
+    nnoremap <silent> zf<CR> :call FoldCreate()<CR>
 endif
